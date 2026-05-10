@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -55,13 +59,24 @@ export class PostsService {
     return post;
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto) {
+  async update(id: string, updatePostDto: UpdatePostDto, userId: string) {
+    const post = await this.findOne(id);
+
+    if (post.author.id !== userId) {
+      throw new UnauthorizedException('Você só pode editar os seus próprios posts!');
+    }
+
     await this.postsRepository.update(id, updatePostDto);
     return this.findOne(id);
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
     const post = await this.findOne(id);
+
+    if (post.author.id !== userId) {
+      throw new UnauthorizedException('Você só pode deletar os seus próprios posts!');
+    }
+
     await this.postsRepository.remove(post);
     return { message: 'Post removido com sucesso' };
   }
