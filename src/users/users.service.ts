@@ -14,7 +14,8 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const salt = 10;
+    const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
 
     const user = this.usersRepository.create({
       ...createUserDto,
@@ -55,6 +56,8 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
-    return await this.usersRepository.findOne({ where: { email } });
+    return await this.usersRepository.findOne({
+      where: { email },
+    });
   }
 }

@@ -13,8 +13,14 @@ export class PostsService {
   ) { }
 
   async create(createPostDto: CreatePostDto, authorId: string) {
+    const generatedSlug = createPostDto.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
+
     const post = this.postsRepository.create({
       ...createPostDto,
+      slug: generatedSlug,
       author: { id: authorId },
     });
 
