@@ -4,8 +4,10 @@ import {
     Column,
     ManyToOne,
     CreateDateColumn,
+    OneToMany
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Comment } from '../../comments/entities/comment.entity';
 
 @Entity('posts')
 export class Post {
@@ -26,4 +28,7 @@ export class Post {
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt!: Date;
+
+    @OneToMany(() => Comment, (comment) => comment.post)
+    comments!: Comment[];
 }
