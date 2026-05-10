@@ -17,7 +17,7 @@ import { CommentsModule } from './comments/comments.module';
       password: 'rootpassword',
       database: 'blog_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
     }),
     UsersModule,
     AuthModule,
